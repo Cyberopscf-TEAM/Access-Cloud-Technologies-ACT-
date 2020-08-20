@@ -1,50 +1,40 @@
-# this script have 
-#1. the command that will show the user the Listining Ports
-#2. the command that will show the allowed and blocked firewall ports protocols
-#3. Create a firewall role to block and allow trafiic (network) for both (Inbound and Outbound) (wired and wireless)
-#====================================================================================================================
-#Get all ports
-Get-NetTCPConnection
-# Get all the listining ports
-Get-NetTCPConnection -State Listen
-#=====================================================================================================================
-#======================================Wireless====================================================================================================
-#create firewall rules that ===Block==== all of the wireless network traffic.
-New-NetFirewallRule -Name "Block Wireless In"  -DisplayName "Block Wireless In"  -Direction Inbound -InterfaceType Wireless -Action Block
-New-NetFirewallRule -Name "Block Wireless Out" -DisplayName "Block Wireless Out" -Direction Outbound -InterfaceType Wireless -Action Block
+# Script: ACT  Access Cloud Technologies
+# Author: Baraah Hawari
+# Date of latest revision: 20/8/2020 
+# Purpose: Blocing file sharing (FTP ports)
 
-#create firewall rules that ===Allow==== all of the wireless network traffic.
-New-NetFirewallRule -Name "Allow Wireless In"  -DisplayName "Allow Wireless In" -Direction Inbound -InterfaceType Wireless -Action Allow
-New-NetFirewallRule -Name "Allow Wireless Out" -DisplayName "Allow Wireless Out" -Direction Outbound -InterfaceType Wireless -Action Allow
+# Declare variables
+#create firewall rules that Block file sharing (FTP Protocol)
+# Port #20
+New-NetFirewallRule -DisplayName "Block Outbound Port 20" -Direction Outbound -LocalPort 20 -Protocol TCP -Action Block
+$BlockPort20_Outbound=Enable-NetFirewallRule -DisplayName "Block Outbound Port 20"
 
-#enable rules
-Enable-NetFirewallRule -DisplayName "Block Wireless In"
-Enable-NetFirewallRule -DisplayName "Block Wireless Out"
+New-NetFirewallRule -DisplayName "Block Inbound Port 20" -Direction Inbound -LocalPort 20 -Protocol TCP -Action Block
+$BlockPort20_Inbound=Enable-NetFirewallRule -DisplayName "Block Inbound Port 20"
 
-Enable-NetFirewallRule -DisplayName "Allow Wireless In"
-Enable-NetFirewallRule -DisplayName "Allow Wireless Out"
+# Port #21
+New-NetFirewallRule -DisplayName "Block Outbound Port 21" -Direction Outbound -LocalPort 21 -Protocol TCP -Action Block
+$BlockPort21_Outbound=Enable-NetFirewallRule -DisplayName "Block Outbound Port 21"
 
-#Disable the Rules
-Disable-NetFirewallRule -DisplayName "Block Wireless In"
-Disable-NetFirewallRule -DisplayName "Block Wireless Out"
+New-NetFirewallRule -DisplayName "Block Inbound Port 21" -Direction Inbound -LocalPort 21 -Protocol TCP -Action Block
+$BlockPort21_Outbound=Enable-NetFirewallRule -DisplayName "Block Inbound Port 21"
+#=========calling the variables/ Enabeling the Ruels===================================================================
+$BlockPort20_Outbound
+$BlockPort20_Inbound
+$BlockPort21_Outbound
+$BlockPort21_Inbound
 
-#===================================Wired============================================================================================
+#==========Disable the Ruels=============================================================================================
+$AllowPort20_Outbound=Disable-NetFirewallRule -DisplayName "Block Outbound Port 20"
+$AllowPort20_Inbound=Disable-NetFirewallRule -DisplayName "Block Inbound Port 20"
+$AllowPort21_Outbound=Disable-NetFirewallRule -DisplayName "Block Outbound Port 21"
+$AllowPort21_Inbound=Disable-NetFirewallRule -DisplayName "Block Inbound Port 21"
 
-#create firewall rules that ===Block==== all of the wired network traffic.
-New-NetFirewallRule -Name "Block Wired In"  -DisplayName "Block Wired In"  -Direction Inbound -InterfaceType Wired -Action Block
-New-NetFirewallRule -Name "Block Wired Out" -DisplayName "Block Wired Out" -Direction Outbound -InterfaceType Wired -Action Block
+#===============calling the variables/ Disabling the Ruels==================================================================
+$AllowPort20_Outbound
+$AllowPort20_Inbound
+$AllowPort21_Outbound
+$AllowPort21_Inbound
 
-#create firewall rules that ===Allow==== all of the Wired network traffic.
-New-NetFirewallRule -Name "Allow Wired In"  -DisplayName "Allow Wired In" -Direction Inbound -InterfaceType Wired -Action Allow
-New-NetFirewallRule -Name "Allow Wired Out" -DisplayName "Allow Wired Out" -Direction Outbound -InterfaceType Wired -Action Allow
 
-#enable rules
-Enable-NetFirewallRule -DisplayName "Block Wired In"
-Enable-NetFirewallRule -DisplayName "Block Wired Out"
-
-Enable-NetFirewallRule -DisplayName "Allow Wired In"
-Enable-NetFirewallRule -DisplayName "Allow Wired Out"
-
-#Disable the Rules
-Disable-NetFirewallRule -DisplayName "Block Wired In"
-Disable-NetFirewallRule -DisplayName "Block Wired Out"
+#Get-NetFirewallRule -Action Block -Enabled True
